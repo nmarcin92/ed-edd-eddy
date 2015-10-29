@@ -1,4 +1,4 @@
-drop table if exists category_keyword, tweet, category, keyword, sentiment, twitter_user, keyword_tweet, sentiment_tweet, mention, retweet, hashtag, hashtag_tweet cascade;
+drop table if exists category_keyword, tweet, category, keyword, sentiment, twitter_user, keyword_tweet, sentiment_tweet, mention, hashtag, hashtag_tweet cascade;
 
 CREATE TABLE "category" (
   "id" SERIAL PRIMARY KEY,
@@ -50,6 +50,7 @@ CREATE TABLE "tweet" (
   "localization" TEXT,
   "date" TIMESTAMP NOT NULL,
   "retweet_count" INTEGER NOT NULL,
+  "in_reply_to" TEXT,
   "retweet_id" TEXT,
   "category" INTEGER,
   "sentiment" TEXT

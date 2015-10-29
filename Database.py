@@ -22,9 +22,10 @@ class Database:
         self.add_user_if_needed(tweet.user)
         localization = str(tweet.coordinates) if tweet.coordinates is not None else None
         retweet_id = tweet.retweeted_status.id_str if hasattr(tweet, 'retweeted_status') else None
+        in_reply_to = tweet.in_reply_to_status_id_str if hasattr(tweet, 'in_reply_to_status_id_str') else None
         cur.execute(
-            """INSERT INTO tweet (id, user_id, text, date, localization, retweet_count, retweet_id) values (%s, %s, %s, %s, %s, %s, %s);""",
-            (tweet.id_str, tweet.user.id_str, tweet.text, tweet.created_at, localization, tweet.retweet_count, retweet_id)
+            """INSERT INTO tweet (id, user_id, text, date, localization, retweet_count, retweet_id, in_reply_to) values (%s, %s, %s, %s, %s, %s, %s, %s);""",
+            (tweet.id_str, tweet.user.id_str, tweet.text, tweet.created_at, localization, tweet.retweet_count, retweet_id, in_reply_to)
         )
         self.find_keyword_in_tweet(cur, tweet.id_str, tweet.text)
         self.find_sentiment_word_in_tweet(cur, tweet.id_str, tweet.text)
