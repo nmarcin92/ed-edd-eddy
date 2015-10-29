@@ -90,15 +90,15 @@ ALTER TABLE "sentiment_tweet" ADD CONSTRAINT "fk_sentiment_tweet__tweet" FOREIGN
 
 CREATE TABLE "mention" (
   "tweet" TEXT NOT NULL,
-  "user" TEXT NOT NULL,
-  PRIMARY KEY ("tweet", "user")
+  "user_id" TEXT NOT NULL,
+  PRIMARY KEY ("tweet", "user_id")
 );
 
-CREATE INDEX "idx_mention" ON "mention" ("user");
+CREATE INDEX "idx_mention" ON "mention" ("user_id");
 
 ALTER TABLE "mention" ADD CONSTRAINT "fk_mention_tweet" FOREIGN KEY ("tweet") REFERENCES "tweet" ("id");
 
-ALTER TABLE "mention" ADD CONSTRAINT "fk_mention_user" FOREIGN KEY ("user") REFERENCES "twitter_user" ("id");
+ALTER TABLE "mention" ADD CONSTRAINT "fk_mention_user" FOREIGN KEY ("user_id") REFERENCES "twitter_user" ("id");
 
 CREATE TABLE "hashtag_tweet" (
   "hashtag" INTEGER NOT NULL,

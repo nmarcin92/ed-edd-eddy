@@ -29,17 +29,15 @@ class Database:
         )
         self.find_keyword_in_tweet(cur, tweet.id_str, tweet.text)
         self.find_sentiment_word_in_tweet(cur, tweet.id_str, tweet.text)
-        if hasattr(tweet.entities, 'hashtags'):
-            self.add_tweet_hashtags(cur, tweet.id_str, tweet.entities.hashtags)
-        if hasattr(tweet.entities, 'user_mentions'):
-            self.add_user_mentions(cur, tweet.id_str, tweet.entities.user_mentions)
+        self.add_tweet_hashtags(cur, tweet.id_str, tweet.entities.get('hashtags'))
+        self.add_user_mentions(cur, tweet.id_str, tweet.entities.get('user_mentions'))
         self.connection.commit()
         cur.close()
 
     def add_user_mentions(self, cursor, tweet_id, user_mentions):
         for um in user_mentions:
             self.add_user_basic_info_if_needed(cursor, um)
-            cursor.execute("""INSERT INTO mention (user, tweet) values (%s, %s);""", (um.id_str, tweet_id))
+            cursor.execute("""INSERT INTO mention (user_id, tweet) values (%s, %s);""", (um.get('id_str'), tweet_id))
 
     def find_keyword_in_tweet(self, cursor, tweet_id, text):
         for k in self.keywords:
@@ -64,19 +62,19 @@ class Database:
 
     def add_tweet_hashtags(self, cursor, tweet_id, hashtags):
         for ht in hashtags:
-            ht_id = self.add_hashtag_if_need(cursor, ht)
+            ht_id = self.add_hashtag_if_need(cursor, ht.get('text'))
             cursor.execute("""INSERT INTO hashtag_tweet (hashtag, tweet) values (%s, %s);""", (ht_id, tweet_id))
 
-    def add_hashtag_if_need(self, cursor, hashtag):
-        cursor.execute("""SELECT id FROM hashtag WHERE text = %s""", (hashtag.text, ))
+    def add_hashtag_if_need(self, cursor, hashtag_text):
+        cursor.execute("""SELECT id FROM hashtag WHERE text = %s""", (hashtag_text, ))
         rows = cursor.fetchall()
         if len(rows) == 0:
-            return self.add_hashtag(cursor, hashtag)
+            return self.add_hashtag(cursor, hashtag_text)
         return rows[0][0]
 
-    def add_hashtag(self, cursor, hashtag):
-        cursor.execute("""INSERT INTO hashtag (text) values (%s)""", (hashtag.text, ))
-        return self.add_hashtag_if_need(cursor, hashtag)
+    def add_hashtag(self, cursor, hashtag_text):
+        cursor.execute("""INSERT INTO hashtag (text) values (%s)""", (hashtag_text, ))
+        return self.add_hashtag_if_need(cursor, hashtag_text)
 
     def update_retweet_count(self, tweet):
         cur = self.connection.cursor()
@@ -97,11 +95,11 @@ class Database:
 
     @staticmethod
     def add_user_basic_info_if_needed(cursor, user):
-        cursor.execute("""SELECT id FROM twitter_user WHERE id = %s""", (user.id_str, ))
+        cursor.execute("""SELECT id FROM twitter_user WHERE id = %s""", (user.get('id_str'), ))
         rows = cursor.fetchall()
         if len(rows) == 0:
             cursor.execute(
-                """INSERT INTO twitter_user (id, username) VALUES (%s, %s)""", (user.id_str, user.screen_name))
+                """INSERT INTO twitter_user (id, username) VALUES (%s, %s)""", (user.get('id_str'), user.get('screen_name')))
 
     @staticmethod
     def add_user(cursor, user):
