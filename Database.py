@@ -35,7 +35,13 @@ class Database:
         cur.close()
 
     def add_user_mentions(self, cursor, tweet_id, user_mentions):
+        um_ids = []
+        unique_ums = []
         for um in user_mentions:
+            if um.get('id_str') not in um_ids:
+                um_ids.append(um.get('id_str'))
+                unique_ums.append(um)
+        for um in unique_ums:
             self.add_user_basic_info_if_needed(cursor, um)
             cursor.execute("""INSERT INTO mention (user_id, tweet) values (%s, %s);""", (um.get('id_str'), tweet_id))
 
@@ -61,8 +67,12 @@ class Database:
             cursor.execute("""INSERT INTO sentiment_tweet (sentiment, tweet) values (%s, %s);""", (s, tweet_id))
 
     def add_tweet_hashtags(self, cursor, tweet_id, hashtags):
+        ht_texts = []
         for ht in hashtags:
-            ht_id = self.add_hashtag_if_need(cursor, ht.get('text'))
+            if ht.get('text') not in ht_texts:
+                ht_texts.append(ht.get('text'))
+        for ht in ht_texts:
+            ht_id = self.add_hashtag_if_need(cursor, ht)
             cursor.execute("""INSERT INTO hashtag_tweet (hashtag, tweet) values (%s, %s);""", (ht_id, tweet_id))
 
     def add_hashtag_if_need(self, cursor, hashtag_text):
