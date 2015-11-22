@@ -1,6 +1,6 @@
 import tweepy
-from Database import Database
-from TweeterStreamListener import TweeterStreamListener
+from reader.Database import Database
+from reader.TweeterStreamListener import TweeterStreamListener
 from auth import api
 
 if __name__ == "__main__":
