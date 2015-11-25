@@ -3,7 +3,7 @@ import psycopg2
 
 class Database:
     def __init__(self):
-        self.connection = psycopg2.connect("dbname=twitter user=postgres password=lolol123")
+        self.connection = psycopg2.connect("dbname=twitter_db user=postgres password=postgres")
 
     def save_sentiment(self, tweet_id, sentiment):
         cur = self.connection.cursor()
