@@ -1,42 +1,47 @@
-from datetime import datetime
-
 import matplotlib.pyplot as plt
 
-from plotter.Database import Database
 
-DENSITY = 100
+class Plotter:
+    def __init__(self):
+        pass
 
+    @staticmethod
+    def plot_line(title, data):
+        fig, ax1 = plt.subplots()
+        ax1.plot(data)
+        ax1.set_title(title)
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        plt.show()
 
-def get_sentiments_value(sent):
-    if sent == 'NEGATIVE':
-        return -1.0
-    elif sent == 'SEMI_NEGATIVE':
-        return -0.5
-    elif sent == 'NEUTRAL':
-        return 0.0
-    elif sent == 'POSITIVE':
-        return 0.5
-    else:
-        return 1.0
+    @staticmethod
+    def plot_many_lines(title, data):
+        fig, ax1 = plt.subplots()
+        legend = []
+        for plot in data:
+            legend.append(plot[0])
+            ax1.plot(plot[1])
+        ax1.legend(legend, loc='upper left')
+        ax1.set_title(title)
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        plt.show()
 
+    @staticmethod
+    def plot_bar(title, x_val_list, y_val_list):
+        fig, ax1 = plt.subplots()
+        ax1.bar(x_val_list, y_val_list)
+        ax1.set_title(title)
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        plt.show()
 
-def plot_sentiment_changes(category, start_date, end_date):
-    database = Database()
-    tweets = sorted(database.find_tweets_by_category(category, start_date, end_date), key=lambda t: t[1])
-    min_date = tweets[0][1]
-    max_date = tweets[len(tweets) - 1][1]
-    interval = (max_date - min_date).total_seconds() / DENSITY
-    sentiments = [[0.0, 0.0] for i in range(DENSITY)]
-    for t in tweets:
-        timespan = min(int(((t[1] - min_date).total_seconds()) / interval), DENSITY - 1)
-        coords = sentiments[timespan]
-        sent = get_sentiments_value(t[2])
-        if sent > 0:
-            coords[0] += sent
-        coords[1] += int(abs(sent))
+    @staticmethod
+    def plot_line_and_bar(title, line, bar):
+        fig, ax1 = plt.subplots()
+        ax1.plot(line)
+        ax1.set_title(title)
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax1.set_ylabel('Sentiment')
 
-    plt.plot([(float(coords[0]) / coords[1]) if coords[1] != 0 else 0.5 for coords in sentiments])
-    plt.show()
-
-
-plot_sentiment_changes('republican', datetime(2015, 11, 01), datetime(2015, 11, 15))
+        ax2 = ax1.twinx()
+        ax2.bar([b[0] for b in bar], [b[1] for b in bar])
+        ax2.set_ylabel('Count')
+        plt.show()
