@@ -6,6 +6,6 @@ if __name__ == "__main__":
     database = Database()
     plotter = Plotter()
     processor = DataProcessor(database)
-    plotter.plot_many_lines(processor.process_sentiment_for_all_categories(['democratic', 'republican']))
+    # plotter.plot_many_lines(processor.process_sentiment_for_all_categories('Comparison', ['democratic', 'republican']))
     line, bar = processor.process_sentiment_for_category('Trump')
     plotter.plot_line_and_bar('Trump', line, bar)
