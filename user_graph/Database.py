@@ -13,7 +13,7 @@ class Database:
             JOIN tweet t2 ON t2.id = t.in_reply_to
             JOIN twitter_user u2 ON t2.user_id = u2.id
             ORDER BY u.followers_count DESC
-            LIMIT %d""", (limit, ))
+            LIMIT %s""", (limit, ))
         return cur.fetchall()
 
     def get_users_retweet_connection(self, limit):
