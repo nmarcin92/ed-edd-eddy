@@ -1,6 +1,6 @@
 from datetime import datetime
 
-DENSITY = 100
+DENSITY = 10
 START_DATE = datetime(2015, 11, 01)
 END_DATE = datetime(2015, 11, 10)
 INTERVAL = (END_DATE - START_DATE).total_seconds() / DENSITY
@@ -16,12 +16,12 @@ class DataProcessor:
             return -1.0
         elif sent == 'SEMI_NEGATIVE':
             return -0.5
-        elif sent == 'NEUTRAL':
-            return 0.0
         elif sent == 'POSITIVE':
+            return 1.0
+        elif sent == 'SEMI POSITIVE':
             return 0.5
         else:
-            return 1.0
+            return 0.0
 
     @staticmethod
     def find_time_span(date):
@@ -40,7 +40,8 @@ class DataProcessor:
     def process_sentiment_for_all_categories(self, categories):
         result = []
         for category in categories:
-            result.append((category, self.process_sentiment_for_category(category)))
+            line, bar = self.process_sentiment_for_category(category)
+            result.append((category, line, bar))
         return result
 
 
