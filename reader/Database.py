@@ -3,7 +3,7 @@ import psycopg2
 
 class Database:
     def __init__(self):
-        self.connection = psycopg2.connect("dbname=twitter user=postgres password=lolol123")
+        self.connection = psycopg2.connect("dbname=twitter user=postgres password=postgres")
         cur = self.connection.cursor()
         cur.execute("""SELECT id,word FROM keyword""")
         self.keywords = [(k[0], k[1]) for k in cur.fetchall()]
@@ -130,3 +130,10 @@ class Database:
         existence = len(rows) > 0
         cur.close()
         return existence
+
+    def get_all_tweets(self):
+        cur = self.connection.cursor()
+        cur.execute("""SELECT * FROM tweet""")
+        rows = cur.fetchall()
+        cur.close()
+        return rows
