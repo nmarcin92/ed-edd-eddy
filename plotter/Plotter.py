@@ -24,11 +24,23 @@ class Plotter:
         plt.show()
 
     @staticmethod
-    def plot_bar(title, x_val_list, y_val_list):
+    def plot_bar(title, bar):
         fig, ax1 = plt.subplots()
-        ax1.bar(x_val_list, y_val_list)
+        ax1.bar([b[0] for b in bar], [b[1] for b in bar])
         ax1.set_title(title)
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax1.autoscale(tight=True)
+        plt.show()
+
+    def plot_many_bars(self, title, legend, bars):
+        fig, ax1 = plt.subplots()
+        color_cycle = ax1._get_lines.color_cycle
+        for i in range(len(bars)):
+            ax1.bar([self.count_x_val(b[0], i, len(legend)) for b in bars[i]], [b[1] for b in bars[i]], width=1.0/len(legend), align='edge', color=next(color_cycle))
+        ax1.set_title(title)
+        ax1.legend(legend, loc='upper left')
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax1.autoscale(tight=True)
         plt.show()
 
     @staticmethod
@@ -41,7 +53,8 @@ class Plotter:
         ax2.bar([b[0] for b in bar], [b[1] for b in bar])
         ax2.set_ylabel(bar_label)
         ax2.set_title(title)
-        ax2.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax2.autoscale(tight=True)
         plt.show()
 
     def plot_many_lines_and_bars(self, title, line_label, bar_label, legend, lines, bars):
@@ -54,12 +67,11 @@ class Plotter:
         color_cycle = ax2._get_lines.color_cycle
         for i in range(len(bars)):
             ax2.bar([self.count_x_val(b[0], i, len(legend)) for b in bars[i]], [b[1] for b in bars[i]], width=1.0/len(legend), align='edge', color=next(color_cycle))
-        ax2.xaxis_date()
         ax2.autoscale(tight=True)
         ax2.set_ylabel(bar_label)
         ax2.set_title(title)
         ax2.legend(legend, loc='upper left')
-        ax2.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         plt.show()
 
     @staticmethod
