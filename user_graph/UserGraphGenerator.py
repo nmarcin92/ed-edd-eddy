@@ -30,6 +30,6 @@ class UserGraphGenerator:
         f = open(filename, 'w')
         for k1 in result:
             for k2 in result[k1]:
-                line = "%s;%s;%d\n" % (k1, k2, result[k1][k2])
+                line = "%s %s %d\n" % (k1, k2, result[k1][k2])
                 f.write(line)
         f.close()
