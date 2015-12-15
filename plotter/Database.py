@@ -17,5 +17,19 @@ class Database:
                      and t.date>=%s and t.date<=%s""", (category, start_date, end_date))
         return [(t[0], t[1], t[2]) for t in cur.fetchall()]
 
+    def find_all_tweets(self, start_date, end_date):
+        cur = self.connection.cursor()
+        cur.execute("""SELECT t.id, t.date FROM tweet t
+                     where t.date>=%s and t.date<=%s""", (start_date, end_date))
+        return [(t[0], t[1]) for t in cur.fetchall()]
+
+    def find_tweets_by_username(self, username, start_date, end_date):
+        cur = self.connection.cursor()
+        cur.execute("""SELECT t.id, t.date, t.sentiment FROM tweet t
+                     JOIN twitter_user u on t.user_id = u.id
+                     where u.username = %s
+                     and t.date>=%s and t.date<=%s""", (username, start_date, end_date))
+        return [(t[0], t[1], t[2]) for t in cur.fetchall()]
+
     def find_all_categories(self):
         return self.categories

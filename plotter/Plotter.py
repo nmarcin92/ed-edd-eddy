@@ -26,13 +26,16 @@ class Plotter:
         plt.close()
 
     @staticmethod
-    def plot_bar(title, bar):
+    def prepare_bar(title, bar):
         fig, ax1 = plt.subplots()
         ax1.bar([b[0] for b in bar], [b[1] for b in bar])
         ax1.set_title(title)
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         ax1.autoscale(tight=True)
-        plt.show()
+        return plt
+
+    def save_bar(self, title, bar):
+        self.prepare_bar(title, bar).savefig('file/{0}.png'.format(title), bbox_inches='tight')
         plt.close()
 
     def plot_many_bars(self, title, legend, bars):
@@ -57,7 +60,7 @@ class Plotter:
         ax2.bar([b[0] for b in bar], [b[1] for b in bar])
         ax2.set_ylabel(bar_label)
         ax2.set_title(title)
-        ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
+        ax1.set_xlabel('Date from 01.10.2015 to 10.11.2015')
         ax2.autoscale(tight=True)
         return plt
 
