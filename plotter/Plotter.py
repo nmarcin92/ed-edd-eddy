@@ -12,6 +12,7 @@ class Plotter:
         ax1.set_title(title)
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         plt.show()
+        plt.close()
 
     @staticmethod
     def plot_many_lines(title, legend, data):
@@ -22,6 +23,7 @@ class Plotter:
         ax1.set_title(title)
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         plt.show()
+        plt.close()
 
     @staticmethod
     def plot_bar(title, bar):
@@ -31,6 +33,7 @@ class Plotter:
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         ax1.autoscale(tight=True)
         plt.show()
+        plt.close()
 
     def plot_many_bars(self, title, legend, bars):
         fig, ax1 = plt.subplots()
@@ -42,9 +45,10 @@ class Plotter:
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         ax1.autoscale(tight=True)
         plt.show()
+        plt.close()
 
     @staticmethod
-    def plot_line_and_bar(title, line_label, bar_label, line, bar):
+    def prepare_line_and_bar(title, line_label, bar_label, line, bar):
         fig, ax1 = plt.subplots()
         ax1.plot(line, linewidth=5)
         ax1.set_ylabel(line_label)
@@ -55,9 +59,17 @@ class Plotter:
         ax2.set_title(title)
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
         ax2.autoscale(tight=True)
-        plt.show()
+        return plt
 
-    def plot_many_lines_and_bars(self, title, line_label, bar_label, legend, lines, bars):
+    def plot_line_and_bar(self, title, line_label, bar_label, line, bar):
+        self.prepare_line_and_bar(title, line_label, bar_label, line, bar).show()
+        plt.close()
+
+    def save_line_and_bar(self, title, line_label, bar_label, line, bar):
+        self.prepare_line_and_bar(title, line_label, bar_label, line, bar).savefig('file/{0}.png'.format(title), bbox_inches='tight')
+        plt.close()
+
+    def prepare_many_lines_and_bars(self, title, line_label, bar_label, legend, lines, bars):
         fig, ax1 = plt.subplots()
         for line in lines:
             ax1.plot(line, linewidth=5)
@@ -72,7 +84,15 @@ class Plotter:
         ax2.set_title(title)
         ax2.legend(legend, loc='upper left')
         ax1.set_xlabel('Date from 01.11.2015 to 10.11.2015')
-        plt.show()
+        return plt
+
+    def plot_many_lines_and_bars(self, title, line_label, bar_label, legend, lines, bars):
+        self.prepare_many_lines_and_bars(title, line_label, bar_label, legend, lines, bars).show()
+        plt.close()
+
+    def save_many_lines_and_bars(self, title, line_label, bar_label, legend, lines, bars):
+        self.prepare_many_lines_and_bars(title, line_label, bar_label, legend, lines, bars).savefig('file/{0}.png'.format(title), bbox_inches='tight')
+        plt.close()
 
     @staticmethod
     def count_x_val(x, i, length):

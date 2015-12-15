@@ -3,7 +3,17 @@ class UserGraphGenerator:
         pass
 
     def generate_csv_file(self, filename, connections):
-        result = {}
+        result = self.generate_edge_dictionary({}, connections)
+        self.write_to_file(filename, result)
+
+    def generate_csv_file2(self, filename, connections1, connections2):
+        result = self.generate_edge_dictionary({}, connections1)
+        result = self.generate_edge_dictionary(result, connections2)
+        self.write_to_file(filename, result)
+
+    @staticmethod
+    def generate_edge_dictionary(dictionary, connections):
+        result = dictionary
         for connection in connections:
             if connection[0] in result:
                 if connection[1] in result[connection[0]]:
@@ -13,7 +23,7 @@ class UserGraphGenerator:
             else:
                 result[connection[0]] = {}
                 result[connection[0]][connection[1]] = 1
-        self.write_to_file(filename, result)
+        return result
 
     @staticmethod
     def write_to_file(filename, result):

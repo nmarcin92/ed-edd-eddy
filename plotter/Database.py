@@ -6,7 +6,7 @@ class Database:
         self.connection = psycopg2.connect("dbname=twitter user=postgres password=lolol123")
         cur = self.connection.cursor()
         cur.execute("""SELECT category FROM category""")
-        self.categories = cur.fetchall()
+        self.categories = [c[0] for c in cur.fetchall()]
         cur.close()
 
     def find_tweets_by_category(self, category, start_date, end_date):

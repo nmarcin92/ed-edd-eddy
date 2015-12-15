@@ -7,10 +7,14 @@ if __name__ == "__main__":
     plotter = Plotter()
     processor = DataProcessor(database)
 
-    # line, bar = processor.process_sentiment_for_category('Trump')
-    # plotter.plot_line_and_bar('Trump', 'Sentiment', 'Total count', line, bar)
-    data = processor.process_sentiment_for_all_categories(['democratic', 'republican'])
-    legend = [d[0] for d in data]
-    lines = [d[1] for d in data]
-    bars = [d[2] for d in data]
-    plotter.plot_many_lines_and_bars('Comparison', 'Sentiment', 'Total count', legend, lines, bars)
+    for category in database.find_all_categories():
+        line, bar = processor.process_sentiment_for_category(category)
+        plotter.save_line_and_bar(category, 'Sentiment', 'Total count', line, bar)
+
+    comparisons = [('democratic', 'republican'), ('Trump', 'Clinton')]
+    for comparison in comparisons:
+        data = processor.process_sentiment_for_all_categories(comparison)
+        legend = [d[0] for d in data]
+        lines = [d[1] for d in data]
+        bars = [d[2] for d in data]
+        plotter.save_many_lines_and_bars('{0} vs {1}'.format(comparison[0], comparison[1]), 'Sentiment', 'Total count', legend, lines, bars)
